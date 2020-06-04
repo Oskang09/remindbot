@@ -8,9 +8,9 @@ type Reminder = {
   tasks: number[],
 }
 
-const secret = Deno.env.get("DISCORD_SECRET");
-const channelId = Deno.env.get("DISCORD_CHANNEL");
-let interval = Deno.env.get('UPDATE_INTERVAL');
+const secret: string = Deno.env.get("DISCORD_SECRET")!!;
+const channelId: string = Deno.env.get("DISCORD_CHANNEL")!!;
+let interval: number = parseInt(Deno.env.get('UPDATE_INTERVAL')!!);
 const client = new Client(secret);
 let reminderListID = "";
 let reminder: Reminder[] = [];
