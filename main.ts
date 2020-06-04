@@ -16,17 +16,21 @@ const interval: number = parseInt(Deno.env.get('UPDATE_INTERVAL')!!);
 const port: number = parseInt(Deno.env.get('PORT')!!);
 
 const client = new Client(secret);
+const headers = [
+  " ----------- Reminder Usage -----------",
+  "1. r! {hh:mm} {reminder display}      - add new reminder using expiry date hour & minutes",
+  "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
+  "3. r! clear                                                - remove all current reminder",
+  "4. r! remove {index}                            - remove reminder based on index",
+  "5. r! refresh                                            - refresh reminder to latest message",
+];
 let reminderListID = "";
 let reminder: Reminder[] = [];
 
 client.evt.ready.attach(
   async () => {
     const list: string[] = [
-      "1. r! {hh:mm} {reminder display}      - add new reminder using expiry date hour & minutes",
-      "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
-      "3. r! clear                                                - remove all current reminder",
-      "4. r! remove {index}                            - remove reminder based on index",
-      "5. r! refresh                                            - refresh reminder to latest message",
+      ...headers,
       " ----------- Reminder ( 0 ) ----------- ",
     ];
     const msg = await client.postMessage(channelId, list.join('\n'));
@@ -37,12 +41,7 @@ client.evt.ready.attach(
 
 function displayTemplate() {
   const list: string[] = [
-    " ----------- Reminder Usage -----------",
-    "1. r! {hh:mm} {reminder display}      - add new reminder using expiry date hour & minutes",
-    "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
-    "3. r! clear                                                - remove all current reminder",
-    "4. r! remove {index}                            - remove reminder based on index",
-    "5. r! refresh                                            - refresh reminder to latest message",
+    ...headers,
     ` ----------- Reminder ( ${reminder.length} ) ----------- `,
   ];
   reminder.forEach(
