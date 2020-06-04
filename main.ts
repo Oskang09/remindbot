@@ -23,21 +23,12 @@ const headers = [
   "3. r! clear                                                - remove all current reminder",
   "4. r! remove {index}                            - remove reminder based on index",
   "5. r! refresh                                            - refresh reminder to latest message",
+  "6. r! connect                                            - reconnect bot if disconnected",
 ];
 let reminderListID = "";
 let reminder: Reminder[] = [];
 
-client.evt.ready.attach(
-  async () => {
-    const list: string[] = [
-      ...headers,
-      " ----------- Reminder ( 0 ) ----------- ",
-    ];
-    const msg = await client.postMessage(channelId, list.join('\n'));
-    reminderListID = msg.id;
-    setInterval(displayTemplate, interval);
-  }
-);
+
 
 function displayTemplate() {
   const list: string[] = [
@@ -60,6 +51,18 @@ function displayTemplate() {
   );
   client.modifyMessage(channelId, reminderListID, list.join('\n'));
 }
+
+client.evt.ready.attach(
+  async () => {
+    const list: string[] = [
+      ...headers,
+      " ----------- Reminder ( 0 ) ----------- ",
+    ];
+    const msg = await client.postMessage(channelId, list.join('\n'));
+    reminderListID = msg.id;
+    setInterval(displayTemplate, interval);
+  }
+);
 
 client.evt.messageCreate.attach(async (args: any) => {
   const { message } = args;
@@ -152,5 +155,6 @@ setInterval(async () => await fetch(serverURL), 28 * 60 * 1000);
 /* HTTP Server */
 const server = serve({ port });
 for await (const req of server) {
+  client.connect();
   req.respond({ body: "OK" });
 }
