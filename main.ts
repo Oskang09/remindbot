@@ -20,10 +20,9 @@ const headers = [
   " ----------- Reminder Usage -----------",
   "1. r! {hh:mm} {reminder display}      - add new reminder using expiry date hour & minutes",
   "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
-  "3. r! clear                                                - remove all current reminder",
-  "4. r! remove {index}                            - remove reminder based on index",
+  "3. r! clear                                                 - remove all current reminder",
+  "4. r! remove {index}                             - remove reminder based on index",
   "5. r! refresh                                            - refresh reminder to latest message",
-  "6. r! connect                                            - reconnect bot if disconnected",
 ];
 let reminderListID = "";
 let reminder: Reminder[] = [];
@@ -155,6 +154,5 @@ setInterval(async () => await fetch(serverURL), 28 * 60 * 1000);
 /* HTTP Server */
 const server = serve({ port });
 for await (const req of server) {
-  client.connect();
   req.respond({ body: "OK" });
 }
