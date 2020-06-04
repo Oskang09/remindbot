@@ -68,6 +68,8 @@ client.evt.messageCreate.attach(async (args: any) => {
   if (message.author.bot) return;
   if (message.channel.id !== channelId) return;
   if (message.content.startsWith("r! ")) {
+    client.deleteMessage(message.channel.id, message.id);
+
     const [command, ...data] = message.content
       .substring(3, message.content.length)
       .split(" ");
@@ -143,7 +145,6 @@ client.evt.messageCreate.attach(async (args: any) => {
         break;
     }
   }
-  client.deleteMessage(message.channel.id, message.id);
 });
 
 client.connect();
