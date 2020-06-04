@@ -118,7 +118,7 @@ client.evt.messageCreate.attach(async (args: any) => {
         remind.tasks.push(
           setTimeout(
             () => {
-              client.postMessage(channelId, `REMIND: @here, its time to` + remind.display);
+              client.postMessage(channelId, `REMIND: @here, its time to ` + remind.display);
               reminder.splice(reminderIndex - 1, 1);
             },
             remind.timeout,
