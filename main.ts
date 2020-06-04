@@ -1,7 +1,6 @@
 import { Client } from "https://deno.land/x/coward@v0.2.1/mod.ts";
 import { moment } from "https://deno.land/x/moment/moment.ts";
 import { serve } from "https://deno.land/std@0.50.0/http/server.ts";
-import { Server } from "../../.cache/deno/deps/https/deno.land/ddf74edf6c19b6b36f651498b443cdd5239162ba525273b3ab5064a17b72f880.ts";
 
 type Reminder = {
   display: string,
@@ -13,6 +12,7 @@ type Reminder = {
 const secret: string = Deno.env.get("DISCORD_SECRET")!!;
 const channelId: string = Deno.env.get("DISCORD_CHANNEL")!!;
 let interval: number = parseInt(Deno.env.get('UPDATE_INTERVAL')!!);
+let port: number = parseInt(Deno.env.get('PORT')!!);
 const client = new Client(secret);
 let reminderListID = "";
 let reminder: Reminder[] = [];
@@ -144,4 +144,4 @@ client.evt.messageCreate.attach(async (args: any) => {
 });
 
 client.connect();
-serve({ port: Deno.env.get('PORT')!! });
+serve({ port });
