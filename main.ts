@@ -8,8 +8,6 @@ type Reminder = {
   tasks: number[],
 }
 
-// const client = new Client("NzEyNjY2NzgzNzgxMjI0NDY4.XsU5pA.LxIkqiVA7WEh2My_i_1brVWB_Xw");
-// const channelId = "712657685199323137";
 const secret = Deno.env.get("DISCORD_SECRET");
 const channelId = Deno.env.get("DISCORD_CHANNEL");
 let interval = Deno.env.get('UPDATE_INTERVAL');
