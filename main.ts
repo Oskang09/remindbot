@@ -55,7 +55,7 @@ function displayTemplate() {
       } else {
         minutes -= 1
       }
-      list.push(`${index + 1}.  *${minutes}* minutes *${seconds === 60 ? 0 : seconds}* seconds    ${remind.display}`);
+      list.push(`${index + 1}.  (${end.format("HH:mm:sss")})  *${minutes}* minutes *${seconds === 60 ? 0 : seconds}* seconds    ${remind.display}`);
     },
   );
   client.modifyMessage(channelId, reminderListID, list.join('\n'));
