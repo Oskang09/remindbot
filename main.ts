@@ -9,10 +9,12 @@ type Reminder = {
   tasks: number[],
 }
 
+const serverURL: string = Deno.env.get("SERVER_URL")!!;
 const secret: string = Deno.env.get("DISCORD_SECRET")!!;
 const channelId: string = Deno.env.get("DISCORD_CHANNEL")!!;
-let interval: number = parseInt(Deno.env.get('UPDATE_INTERVAL')!!);
-let port: number = parseInt(Deno.env.get('PORT')!!);
+const interval: number = parseInt(Deno.env.get('UPDATE_INTERVAL')!!);
+const port: number = parseInt(Deno.env.get('PORT')!!);
+
 const client = new Client(secret);
 let reminderListID = "";
 let reminder: Reminder[] = [];
@@ -144,4 +146,12 @@ client.evt.messageCreate.attach(async (args: any) => {
 });
 
 client.connect();
-serve({ port });
+
+/* Repeating calling to prevent idling */
+setInterval(async () => await fetch(serverURL), 28 * 60 * 1000);
+
+/* HTTP Server */
+const server = serve({ port });
+for await (const req of server) {
+  req.respond({ body: "OK" });
+}
