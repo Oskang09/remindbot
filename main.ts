@@ -1,6 +1,10 @@
 import { Client } from "https://deno.land/x/coward@v0.2.1/mod.ts";
 import { serve } from "https://deno.land/std@0.50.0/http/server.ts";
-import { format, parse, differenceInMinutes, addMilliseconds, formatDistance } from "https://deno.land/x/date_fns/index.js";
+import {
+  formatDistance,
+  format, parse,
+  differenceInMinutes, addMilliseconds, addHours,
+} from "https://deno.land/x/date_fns/index.js";
 
 
 type Reminder = {
@@ -22,7 +26,7 @@ const headers = [
   "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
   "3. r! clear                                                 - remove all current reminder",
   "4. r! remove {index}                             - remove reminder based on index",
-  "5. r! show                                                    - to show reminder board",
+  "5. r! show                                                   - to show reminder board",
 ];
 let reminder: Reminder[] = [];
 
@@ -35,7 +39,8 @@ function displayTemplate() {
     (remind, index) => {
       const end = addMilliseconds(remind.date, remind.timeout);
       const distance = formatDistance(end, remind.date, { includeSeconds: true });
-      list.push(`${index + 1}.  (${format(end, "HH:mm:ss", { timezone: "Asia/Kuala_Lumpur" })})   *${distance}*  ${remind.display}`);
+      const malaysiaTime = addHours(end, 8); // by default is UTC so +8 will be malaysia time
+      list.push(`${index + 1}.  (${format(malaysiaTime, "HH:mm:ss", undefined)})  ${distance}  ${remind.display}`);
     },
   );
   client.postMessage(channelId, list.join('\n'));
