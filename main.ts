@@ -40,7 +40,7 @@ function displayTemplate() {
       const end = addMilliseconds(remind.date, remind.timeout);
       const distance = formatDistance(end, Date.now(), { includeSeconds: true });
       const malaysiaTime = addHours(end, 8); // by default is UTC so +8 will be malaysia time
-      list.push(`${index + 1}.  (${format(malaysiaTime, "HH:mm:ss", undefined)})  ${remind.display}  ${distance}`);
+      list.push(`${index + 1}.  (${format(malaysiaTime, "HH:mm:ss", undefined)})  ${remind.display} in *${distance}*`);
     },
   );
   client.postMessage(channelId, list.join('\n'));
@@ -110,24 +110,43 @@ client.evt.messageCreate.attach((args: any) => {
         const reminderIndex = reminder.push(remind);
         remind.tasks.push(
           setTimeout(
-            () => {
-              client.postMessage(channelId, `REMIND: @here, its time to ` + remind.display);
+            async () => {
+              await client.postMessage(channelId, `REMIND: @here, its time to ` + remind.display);
               reminder.splice(reminderIndex - 1, 1);
+              setTimeout(displayTemplate, 1000);
             },
             remind.timeout,
           ),
         );
         remind.tasks.push(
-          setTimeout(() => client.postMessage(channelId, `REMIND: @here, 1 minutes more to ` + remind.display), remind.timeout - 60000),
+          setTimeout(
+            async () => {
+              await client.postMessage(channelId, `REMIND: @here, 1 minutes more to ` + remind.display);
+              setTimeout(displayTemplate, 1000);
+            },
+            remind.timeout - 60000
+          ),
         );
         if (remind.timeout > 60000 * 5) {
           remind.tasks.push(
-            setTimeout(() => client.postMessage(channelId, `REMIND: @here, 5 minutes more to ` + remind.display), remind.timeout - (60000 * 5)),
+            setTimeout(
+              async () => {
+                await client.postMessage(channelId, `REMIND: @here, 5 minutes more to ` + remind.display)
+                setTimeout(displayTemplate, 1000);
+              },
+              remind.timeout - (60000 * 5)
+            ),
           );
         }
         if (remind.timeout > 60000 * 10) {
           remind.tasks.push(
-            setTimeout(() => client.postMessage(channelId, `REMIND: @here, 10 minutes more to ` + remind.display), remind.timeout - (60000 * 10)),
+            setTimeout(
+              async () => {
+                await client.postMessage(channelId, `REMIND: @here, 10 minutes more to ` + remind.display);
+                setTimeout(displayTemplate, 1000);
+              },
+              remind.timeout - (60000 * 10)
+            ),
           );
         }
         displayTemplate();
