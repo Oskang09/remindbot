@@ -12,7 +12,6 @@ type Reminder = {
 const serverURL: string = Deno.env.get("SERVER_URL")!!;
 const secret: string = Deno.env.get("DISCORD_SECRET")!!;
 const channelId: string = Deno.env.get("DISCORD_CHANNEL")!!;
-const interval: number = parseInt(Deno.env.get('UPDATE_INTERVAL')!!);
 const port: number = parseInt(Deno.env.get('PORT')!!);
 
 const client = new Client(secret);
