@@ -18,9 +18,10 @@ Currently deployment is using github, you can fork your own and deploy to heroku
 SERVER_URL // your server endpoint ( for keep waking up dyno )
 DISCORD_SECRET // bot token
 DISCORD_CHANNEL // specify which channel to only use this
-UPDATE_INTERVAL // when will the reminder board refresh ( recommended 3000 )
 ```
 
 # Showcase
+
+Interval have been removed due to will hit discord rate limit.
 
 ![example.png](example.png)
