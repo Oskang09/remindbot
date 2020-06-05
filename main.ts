@@ -38,7 +38,7 @@ function displayTemplate() {
   reminder.forEach(
     (remind, index) => {
       const end = addMilliseconds(remind.date, remind.timeout);
-      const distance = formatDistance(end, remind.date, { includeSeconds: true });
+      const distance = formatDistance(end, Date.now(), { includeSeconds: true });
       const malaysiaTime = addHours(end, 8); // by default is UTC so +8 will be malaysia time
       list.push(`${index + 1}.  (${format(malaysiaTime, "HH:mm:ss", undefined)})  ${distance}  ${remind.display}`);
     },
