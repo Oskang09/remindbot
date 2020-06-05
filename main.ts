@@ -1,11 +1,12 @@
 import { Client } from "https://deno.land/x/coward@v0.2.1/mod.ts";
-import { moment } from "https://deno.land/x/moment/moment.ts";
 import { serve } from "https://deno.land/std@0.50.0/http/server.ts";
+import { format, parse, differenceInMinutes, addMilliseconds, formatDistance } from "https://deno.land/x/date_fns/index.js";
+
 
 type Reminder = {
   display: string,
   timeout: number,
-  date: any,
+  date: Date,
   tasks: number[],
 }
 
@@ -32,16 +33,9 @@ function displayTemplate() {
   ];
   reminder.forEach(
     (remind, index) => {
-      const end = remind.date.clone().add(remind.timeout, 'milliseconds');
-      const duration = moment.duration(end.diff(moment())).asSeconds();
-      let seconds = Math.ceil(duration % 60);
-      let minutes = Math.ceil(duration / 60);
-      if (seconds === 60) {
-        seconds = 0
-      } else {
-        minutes -= 1
-      }
-      list.push(`${index + 1}.  (${end.format("HH:mm:ss")})  *${minutes}* minutes *${seconds === 60 ? 0 : seconds}* seconds    ${remind.display}`);
+      const end = addMilliseconds(remind.date, remind.timeout);
+      const distance = formatDistance(end, remind.date, { includeSeconds: true });
+      list.push(`${index + 1}.  (${format(end, "HH:mm:ss", { timezone: "Asia/Kuala_Lumpur" })})   *${distance}*  ${remind.display}`);
     },
   );
   client.postMessage(channelId, list.join('\n'));
@@ -87,8 +81,8 @@ client.evt.messageCreate.attach((args: any) => {
       default:
         let timeout = 0;
         if (command.includes(":")) {
-          const end = moment(command, "HH:mm");
-          timeout = moment.duration(end.diff(moment())).asMinutes()
+          const end = parse(command, "HH:mm", new Date(), undefined);
+          timeout = differenceInMinutes(end, Date.now())
         } else {
           timeout = parseInt(command);
         }
@@ -104,7 +98,7 @@ client.evt.messageCreate.attach((args: any) => {
         let remind: Reminder = {
           display: data.join(" "),
           timeout: timeout * 60 * 1000,
-          date: moment(),
+          date: new Date(),
           tasks: [],
         };
 
