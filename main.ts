@@ -22,12 +22,9 @@ const headers = [
   "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
   "3. r! clear                                                 - remove all current reminder",
   "4. r! remove {index}                             - remove reminder based on index",
-  "5. r! refresh                                            - refresh reminder to latest message",
+  "5. r! show                                     - to show reminder board",
 ];
-let reminderListID = "";
 let reminder: Reminder[] = [];
-
-
 
 function displayTemplate() {
   const list: string[] = [
@@ -48,7 +45,7 @@ function displayTemplate() {
       list.push(`${index + 1}.  (${end.format("HH:mm:sss")})  *${minutes}* minutes *${seconds === 60 ? 0 : seconds}* seconds    ${remind.display}`);
     },
   );
-  client.modifyMessage(channelId, reminderListID, list.join('\n'));
+  client.postMessage(channelId, list.join('\n'));
 }
 
 client.evt.ready.attach(
@@ -58,8 +55,6 @@ client.evt.ready.attach(
       " ----------- Reminder ( 0 ) ----------- ",
     ];
     const msg = await client.postMessage(channelId, list.join('\n'));
-    reminderListID = msg.id;
-    setInterval(displayTemplate, interval);
   }
 );
 
@@ -74,9 +69,7 @@ client.evt.messageCreate.attach(async (args: any) => {
       .substring(3, message.content.length)
       .split(" ");
     switch (command) {
-      case "refresh":
-        const msg = await client.postMessage(channelId, "");
-        reminderListID = msg.id;
+      case "show":
         displayTemplate();
         break;
       case "remove":
