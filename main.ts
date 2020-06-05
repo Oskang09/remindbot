@@ -41,23 +41,23 @@ function displayTemplate() {
       } else {
         minutes -= 1
       }
-      list.push(`${index + 1}.  (${end.format("HH:mm:sss")})  *${minutes}* minutes *${seconds === 60 ? 0 : seconds}* seconds    ${remind.display}`);
+      list.push(`${index + 1}.  (${end.format("HH:mm:ss")})  *${minutes}* minutes *${seconds === 60 ? 0 : seconds}* seconds    ${remind.display}`);
     },
   );
   client.postMessage(channelId, list.join('\n'));
 }
 
 client.evt.ready.attach(
-  async () => {
+  () => {
     const list: string[] = [
       ...headers,
       " ----------- Reminder ( 0 ) ----------- ",
     ];
-    const msg = await client.postMessage(channelId, list.join('\n'));
+    client.postMessage(channelId, list.join('\n'));
   }
 );
 
-client.evt.messageCreate.attach(async (args: any) => {
+client.evt.messageCreate.attach((args: any) => {
   const { message } = args;
   if (message.author.bot) return;
   if (message.channel.id !== channelId) return;
@@ -140,7 +140,7 @@ client.evt.messageCreate.attach(async (args: any) => {
 client.connect();
 
 /* Repeating calling to prevent idling */
-setInterval(async () => await fetch(serverURL), 28 * 60 * 1000);
+setInterval(() => fetch(serverURL), 28 * 60 * 1000);
 
 /* HTTP Server */
 const server = serve({ port });
