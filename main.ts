@@ -26,7 +26,7 @@ const headers = [
   "2. r! {minutes} {reminder display}   - add new reminder using expiry in minutes",
   "3. r! clear                                                 - remove all current reminder",
   "4. r! remove {index}                             - remove reminder based on index",
-  "5. r! show                                                   - to show reminder board",
+  "5. r! show                                                  - to show reminder board",
 ];
 let reminder: Reminder[] = [];
 
@@ -40,7 +40,7 @@ function displayTemplate() {
       const end = addMilliseconds(remind.date, remind.timeout);
       const distance = formatDistance(end, Date.now(), { includeSeconds: true });
       const malaysiaTime = addHours(end, 8); // by default is UTC so +8 will be malaysia time
-      list.push(`${index + 1}.  (${format(malaysiaTime, "HH:mm:ss", undefined)})  ${distance}  ${remind.display}`);
+      list.push(`${index + 1}.  (${format(malaysiaTime, "HH:mm:ss", undefined)})  ${remind.display}  ${distance}`);
     },
   );
   client.postMessage(channelId, list.join('\n'));
